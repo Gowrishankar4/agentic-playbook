@@ -1,0 +1,612 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Gowrishankar4/agentic-playbook/config/schema.json",
+  "title": "Playbook config",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "event": {
+      "enum": [
+        "before_scaffold",
+        "after_scaffold",
+        "after_interview",
+        "after_analysis",
+        "before_approval",
+        "after_approval",
+        "task_started",
+        "task_done",
+        "task_added",
+        "decision_recorded",
+        "directive_added",
+        "before_commit",
+        "before_sweep",
+        "after_sweep",
+        "audit",
+        "close"
+      ]
+    },
+    "entry": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^(skill:.+|command:/.+|mcp:.+|mcp\\?.+|script:.+|subagent:.+|instruction:.+|builtin|none)$"
+        },
+        {
+          "type": "object",
+          "required": [
+            "use"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "use": {
+              "type": "string"
+            },
+            "when": {
+              "$ref": "#/$defs/when"
+            }
+          }
+        }
+      ]
+    },
+    "when": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "repos": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "task_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "presets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "request_matches": {
+          "type": "string"
+        },
+        "files_exist": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "not": {
+          "$ref": "#/$defs/when"
+        }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "trigger": {
+          "const": "always"
+        },
+        "on": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "on_event": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/event"
+          }
+        },
+        "when": {
+          "$ref": "#/$defs/when"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "instruction_file": {
+          "type": "string"
+        },
+        "use": {
+          "type": "string"
+        },
+        "ask": {
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "required",
+            "advisory"
+          ]
+        },
+        "priority": {
+          "type": "integer"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "trigger"
+          ]
+        },
+        {
+          "required": [
+            "on"
+          ]
+        },
+        {
+          "required": [
+            "on_event"
+          ]
+        },
+        {
+          "required": [
+            "when"
+          ]
+        },
+        {
+          "properties": {
+            "enabled": {
+              "const": false
+            }
+          },
+          "required": [
+            "enabled"
+          ]
+        }
+      ]
+    },
+    "stringOrList": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    }
+  },
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "include": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "root": {
+      "type": "string"
+    },
+    "extra_roots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "naming": {
+      "type": "string"
+    },
+    "preset": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "context_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "object",
+      "properties": {
+        "style": {
+          "enum": [
+            "emoji",
+            "ascii",
+            "custom"
+          ]
+        },
+        "markers": {
+          "type": "object"
+        },
+        "stale_after_days": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fallback": {
+          "enum": [
+            "agent-tracked",
+            "ask"
+          ]
+        }
+      }
+    },
+    "ids": {
+      "type": "object"
+    },
+    "approval": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "approvers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "git": {
+      "type": "object",
+      "properties": {
+        "init": {
+          "enum": [
+            "ask",
+            "always",
+            "never"
+          ]
+        },
+        "commit": {
+          "enum": [
+            "ask",
+            "always",
+            "never"
+          ]
+        },
+        "push": {
+          "enum": [
+            "never",
+            "ask"
+          ]
+        }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "properties": {
+        "pointer": {
+          "enum": [
+            "ask",
+            "always",
+            "never"
+          ]
+        }
+      }
+    },
+    "close": {
+      "type": "object",
+      "properties": {
+        "archive": {
+          "enum": [
+            "ask",
+            "move",
+            "keep"
+          ]
+        }
+      }
+    },
+    "sensitive_data": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "enum": [
+              "secrets",
+              "pii",
+              "phi",
+              "pci"
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "patterns"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "patterns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "placeholder": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "modules": {
+      "type": "object",
+      "properties": {
+        "optional_default": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "offer": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/entry"
+        }
+      }
+    },
+    "interview": {
+      "type": "object",
+      "properties": {
+        "depth": {
+          "enum": [
+            "quick",
+            "standard",
+            "deep"
+          ]
+        },
+        "one_question_at_a_time": {
+          "type": "boolean"
+        },
+        "spec_format": {
+          "enum": [
+            "xml",
+            "markdown"
+          ]
+        },
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "extra_questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "question"
+            ],
+            "properties": {
+              "question": {
+                "type": "string"
+              },
+              "when": {
+                "$ref": "#/$defs/when"
+              }
+            }
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rule"
+      }
+    },
+    "custom_modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "file"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "template": {
+            "type": "string"
+          },
+          "template_text": {
+            "type": "string"
+          },
+          "add_on": {
+            "oneOf": [
+              {
+                "const": "ask"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "read_order": {
+            "type": "string"
+          },
+          "reacts_to": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "commands": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "instruction_file"
+        ],
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "instruction_file": {
+            "type": "string"
+          },
+          "writes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "read_only": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "red_flags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "thought",
+          "reality"
+        ]
+      }
+    },
+    "audit_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "severity"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "error",
+              "warn",
+              "info"
+            ]
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "pattern": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "instruction": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "pattern"
+            ]
+          },
+          {
+            "required": [
+              "instruction"
+            ]
+          },
+          {
+            "properties": {
+              "enabled": {
+                "const": false
+              }
+            },
+            "required": [
+              "enabled"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

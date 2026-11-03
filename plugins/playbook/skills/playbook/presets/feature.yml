@@ -1,0 +1,7 @@
+# Feature preset — one feature, one or two repos, requirement IDs, optional frozen API contract.
+version: 1
+ids: { task_style: sequential, requirement: group, decided: DD }
+modules:
+  optional_default: []
+  offer: [API-CONTRACT, TEST-CASES, HOW-TO-TEST]
+interview: { depth: standard }

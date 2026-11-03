@@ -1,0 +1,23 @@
+{
+  "name": "playbook",
+  "version": "1.0.0",
+  "description": "Turn a requirement or intent into a playbook every agent session continues from: requirement interview saved to the requirements file → plan → approval → work tracked from git, with every file kept consistent by a ripple sweep. Add your own skills on events — e.g. to mirror progress to an issue tracker.",
+  "author": {
+    "name": "Gowrishankar Sivagnanam",
+    "email": "gowrishankarsivagnanam@gmail.com"
+  },
+  "homepage": "https://github.com/Gowrishankar4/agentic-playbook",
+  "repository": "https://github.com/Gowrishankar4/agentic-playbook",
+  "license": "MIT",
+  "keywords": [
+    "playbook",
+    "project-tracking",
+    "requirements",
+    "interview",
+    "planning",
+    "traceability",
+    "git",
+    "agents",
+    "workflow"
+  ]
+}

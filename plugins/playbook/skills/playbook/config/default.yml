@@ -1,0 +1,72 @@
+# Built-in defaults. Do not edit — override in ~/.config/playbook/config.yml or <playbook>/playbook.yml.
+version: 1
+
+root: ~/playbooks
+extra_roots: []
+naming: "{name}-playbook"
+preset: feature
+language: en
+context_files: [AGENTS.md, CLAUDE.md]
+
+status:
+  style: emoji            # emoji | ascii | custom
+  stale_after_days: 14
+
+evidence:
+  required: [commit_or_pr, verify]
+  fallback: agent-tracked   # agent-tracked | ask   (when nothing is committed)
+
+ids:
+  task_prefix: auto       # auto = 2–3 letter abbreviation of the name
+  task_style: sequential  # sequential (WS-07) | phase (BE-2.3)
+  requirement: group      # group (E1) | fr (FR-01) | section (§3.2)
+  decision: D
+  decided: DD             # DD | ADR
+  ambiguity: A
+  finding: F
+  directive: DIR
+
+approval:
+  required: true
+  approvers: []
+
+git:
+  init: ask               # ask | always | never
+  commit: ask
+  push: never             # never | ask
+
+memory:
+  pointer: ask            # ask | always | never
+
+close:
+  archive: ask            # ask | move | keep
+
+sensitive_data: [secrets, pii]
+
+modules:
+  optional_default: []    # e.g. [TEST-CASES, HOW-TO-TEST]
+  offer: [API-CONTRACT, TEST-CASES, HOW-TO-TEST]
+
+capabilities:
+  interview:        [builtin]           # map your own, e.g. [skill:prompt, builtin]
+  code-analysis:    [subagent:explore, builtin]
+  plan-breakdown:   [builtin]
+  implement:        [none]
+  verify:           [none]
+  commit:           [none]
+  debug:            [none]
+  ui-design:        [none]
+  security-review:  [none]
+  memory-pointer:   [builtin]
+
+interview:
+  depth: standard
+  one_question_at_a_time: true
+  spec_format: xml
+  extra_questions: []
+
+rules: []
+commands: {}
+red_flags: []
+audit_checks: []
+include: []

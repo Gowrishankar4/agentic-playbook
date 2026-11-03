@@ -1,0 +1,48 @@
+# Team on Jira. Keep in a shared repo as team.yml; developers `include:` it.
+# Progress is tracked from git by the core; Jira is mirrored by custom skills on events.
+version: 1
+preset: program
+approval:
+  approvers: [Engineering manager, Product lead]
+sensitive_data: [secrets, pii, pci]
+
+capabilities:
+  issue-tracker: [skill:jira-comment, "mcp?jira atlassian comment"]
+  issue-create:  [skill:jira-create, "mcp?jira atlassian create issue"]
+
+rules:
+  - id: jira-create
+    on_event: [task_added, after_approval]
+    mode: advisory
+    use: issue-create
+    instruction: Ask first, then create one Jira issue per task without one (project PAY, label playbook). Append the key to the task's Evidence cell.
+  - id: jira-comment
+    on_event: [task_done]
+    mode: advisory
+    use: issue-tracker
+    instruction: Ask first, then post a solution report (requirements, what changed, commit, tests, open items) on the task's issue. Never change its status.
+  - id: pci-review
+    on_event: [task_done]
+    when: { paths: ["src/payments/**"] }
+    mode: required
+    ask: Has the PCI reviewer signed off this change? Name and date.
+  - id: rollback-in-plan
+    on_event: [before_approval]
+    mode: required
+    instruction: Every phase's exit criteria include a tested rollback step.
+
+custom_modules:
+  - id: security-review
+    file: SECURITY-REVIEW.md
+    template_text: |
+      # Security review
+      | Task | Reviewed | By | Date | Notes |
+      |---|---|---|---|---|
+    add_on: [new]
+    read_order: after PLAN
+    reacts_to:
+      task_done: Add a row for the task; reviewed / not reviewed, with evidence.
+
+red_flags:
+  - thought: "Payments change is tiny, skip the PCI review"
+    reality: "Size doesn't matter; any change under src/payments gets reviewed."

@@ -1,0 +1,118 @@
+# Copy to ~/.config/playbook/config.yml (or run `/playbook config init`).
+# Every key is optional; anything left out falls back to config/default.yml.
+# Per-playbook overrides go in <playbook>/playbook.yml with the same keys.
+version: 1
+
+# ── Where playbooks live ────────────────────────────────────────────
+root: ~/work/playbooks
+extra_roots: [~/work/archive-playbooks]
+naming: "{name}-playbook"
+preset: feature                 # feature | program | regulated | ./my-preset.yml
+context_files: [AGENTS.md, CLAUDE.md, GEMINI.md]
+
+# Shared team config (rules, red flags, modules) kept in a repo
+include:
+  - ~/work/eng-handbook/playbook/team.yml
+
+# ── Map steps to YOUR tools (first available + matching wins) ───────
+capabilities:
+  interview: [builtin]                   # or [skill:prompt, builtin] — saved to 00-REQUIREMENTS.md either way
+  code-analysis:
+    - { use: skill:code-graph, when: { repos: [api, web] } }
+    - subagent:explore
+    - builtin
+  plan-breakdown: [skill:writing-plans, builtin]
+  issue-tracker: [skill:linear-comment, "mcp?linear comment"]   # your own capability — used by the rule below
+  implement: [skill:tdd]
+  verify:    [command:/verify, script:"npm test && npm run lint"]
+  commit:    [command:/commit]
+  debug:     [skill:systematic-debugging]
+  ui-design: [skill:frontend-design]
+  security-review: [skill:security-review]
+  perf-test: [script:"k6 run load/smoke.js"]   # your own capability
+
+# ── Requirement interview ───────────────────────────────────────────
+interview:
+  depth: standard               # quick | standard | deep
+  spec_format: xml
+  extra_questions:
+    - question: Does this need a feature flag? Name it.
+      when: { repos: [web] }
+    - question: Which analytics events should fire?
+      when: { request_matches: "(?i)signup|checkout|onboarding" }
+
+# ── Custom instructions with triggers ───────────────────────────────
+rules:
+  - id: tone
+    trigger: always
+    mode: advisory
+    instruction: Write log entries in plain English; no internal codenames.
+
+  - id: perf-budget
+    on_event: [before_approval]
+    when: { paths: ["src/api/**"] }
+    mode: required
+    instruction: Add p95 latency and payload size to every exit criterion touching src/api.
+
+  - id: security-review
+    on_event: [task_done]
+    when: { labels: [auth, payments] }
+    mode: required
+    use: security-review
+
+  - id: load-test-before-done
+    on_event: [task_done]
+    when: { task_types: [api], not: { labels: [internal] } }
+    mode: advisory
+    use: perf-test
+
+  - id: confirm-migrations
+    on_event: [before_commit]
+    when: { paths: ["**/migrations/**"] }
+    mode: required
+    ask: This commit includes a migration. Has it been run against a staging copy?
+
+  - id: tracker-comment          # progress is tracked from git; mirror it to your tracker if you want
+    on_event: [task_done]
+    mode: advisory
+    use: issue-tracker
+    instruction: Post a short solution report on the task's issue (ask first). Never change the issue's status.
+
+# ── Your own playbook files ─────────────────────────────────────────
+custom_modules:
+  - id: security-review
+    file: SECURITY-REVIEW.md
+    title: Security review
+    template: ~/work/eng-handbook/playbook/security-review.md
+    add_on: ask
+    read_order: after PLAN
+    reacts_to:
+      task_done: Add a row for the task; reviewed / not reviewed, with evidence.
+      decision_recorded: Re-check rows that cited the decision.
+
+# ── Your own sub-commands ───────────────────────────────────────────
+commands:
+  release-notes:
+    description: Draft release notes from ✅ tasks since the last tag
+    instruction_file: ~/work/eng-handbook/playbook/release-notes.md
+    writes: [RELEASE-NOTES.md]
+
+# ── Extra red flags and lint checks ─────────────────────────────────
+red_flags:
+  - thought: "It's an internal endpoint, skip the security review"
+    reality: "Internal endpoints get the same review."
+
+audit_checks:
+  - id: no-todo-in-plan
+    severity: warn
+    files: ["02-PLAN.md"]
+    pattern: "\\bTODO\\b"
+    message: Plan contains TODO — turn it into a task or D-NN.
+
+# ── Data protection ─────────────────────────────────────────────────
+sensitive_data:
+  - secrets
+  - pii
+  - id: customer-ids
+    patterns: ["\\bCUST-\\d{6,}\\b"]
+    placeholder: "<CUSTOMER_ID>"

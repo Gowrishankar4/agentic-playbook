@@ -1,0 +1,9 @@
+# One developer. Progress is tracked from git — nothing to configure for that.
+version: 1
+root: ~/code/playbooks
+capabilities:
+  verify: [script:"npm test"]
+interview:
+  depth: quick
+git:
+  init: always

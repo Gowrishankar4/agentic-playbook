@@ -1,0 +1,21 @@
+# Regulated preset — program shape plus health/finance data controls and a go-live runbook.
+version: 1
+include: [program.yml]
+sensitive_data: [secrets, pii, phi, pci]
+modules:
+  optional_default: [DIRECTIVES, ARCHITECTURE, TEST-CASES, RUNBOOK]
+evidence:
+  required: [commit_or_pr, verify, test_counts]
+rules:
+  - id: data-classification
+    on_event: [after_analysis]
+    mode: required
+    instruction: For every new field or table, record its data classification and retention in 01-ANALYSIS.md risks.
+  - id: signoff-before-golive
+    on_event: [close]
+    when: { files_exist: ["*-RUNBOOK.md"] }
+    mode: required
+    ask: Who signed off go-live, and on what date?
+red_flags:
+  - thought: "Real record IDs make the test case clearer"
+    reality: "Placeholders only. Synthetic data in fixtures, never production values."

@@ -1,0 +1,13 @@
+version: 1
+rules:
+  - id: totals-parity
+    on_event: [task_done]
+    when: { repos: [api] }
+    mode: required
+    instruction: Attach the totals-parity test result (old vs new pricing on the fixture carts) as evidence.
+audit_checks:
+  - id: no-todo-in-plan
+    severity: warn
+    files: ["*PLAN*.md"]
+    pattern: "\\bTODO\\b"
+    message: Plan contains TODO

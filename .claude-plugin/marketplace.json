@@ -1,0 +1,14 @@
+{
+  "name": "agentic-playbook",
+  "description": "Playbooks for AI-assisted delivery: requirements, plan, decisions, progress and traceability that stay consistent across sessions.",
+  "owner": {
+    "name": "Gowrishankar Sivagnanam"
+  },
+  "plugins": [
+    {
+      "name": "playbook",
+      "source": "./plugins/playbook",
+      "description": "Requirement interview → plan → approval → consistent progress tracking. Configurable rules, triggers, tools, files and commands."
+    }
+  ]
+}

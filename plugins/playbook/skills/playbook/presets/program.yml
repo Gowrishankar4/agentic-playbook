@@ -1,0 +1,13 @@
+# Program preset — multi-repo program, phases, ADRs, approver directives, target architecture.
+version: 1
+ids: { task_style: phase, requirement: fr, decided: ADR }
+modules:
+  optional_default: [DIRECTIVES, ARCHITECTURE]
+  offer: [API-CONTRACT, TEST-CASES, HOW-TO-TEST, RUNBOOK]
+interview: { depth: deep }
+rules:
+  - id: adr-for-architecture
+    on_event: [decision_recorded]
+    when: { files_exist: ["*-ARCHITECTURE.md"] }
+    mode: required
+    instruction: If the decision changes the data model, API surface or repo boundaries, record it as an ADR row and update the architecture file.

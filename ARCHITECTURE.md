@@ -26,7 +26,7 @@ AI agents forget between sessions, teammates work in different tools, and status
 ├──────────────────────────────────────────────────────────────────┤
 │ 5. Adapters        references/adapters/agents.md, git.md          │
 ├──────────────────────────────────────────────────────────────────┤
-│ 6. Tooling         scripts/audit.py (lint + config validation),   │
+│ 6. Tooling         tools/audit.py (lint + config validation),     │
 │                    templates/, presets/, config/schema.json       │
 └──────────────────────────────────────────────────────────────────┘
 ```

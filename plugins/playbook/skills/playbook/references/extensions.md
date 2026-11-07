@@ -177,7 +177,7 @@ audit_checks:
     instruction: Every phase in 08-RUNBOOK.md must name an owner.
 ```
 
-Pattern checks run in `scripts/audit.py`; instruction checks are done by the agent during `audit`.
+Pattern checks are applied by the agent during `audit` (or mechanically by the repository's `tools/audit.py`, when the user has it); instruction checks are always done by the agent.
 
 ## `presets`
 

@@ -2,9 +2,9 @@
 
 Read-only. Fix only after the user approves.
 
-A line the user has confirmed is fine can carry `<!-- audit:ignore -->` (or `<!-- audit:ignore relative-date -->` for one check); the script skips it.
+A line the user has confirmed is fine can carry `<!-- audit:ignore -->` (or `<!-- audit:ignore relative-date -->` for one check); `audit.py` skips it, and so do you.
 
-1. If the agent can run scripts, run `scripts/audit.py <playbook> [--config <merged config>]` for the mechanical checks. Otherwise do them by reading.
+1. Do the mechanical checks below by reading the playbook files — the list is complete. If the agent can run scripts and the user has a copy of `audit.py` (it lives in the repository's `tools/` folder; the Claude directory build doesn't bundle scripts), run `python3 <path>/audit.py <playbook> [--config <merged config>]` instead and add anything it reports.
 2. Do the judgement checks the script can't, plus every `audit_checks` entry with an `instruction`, plus rules with `on_event: [audit]`.
 
 Report grouped by severity (error → warn → info):

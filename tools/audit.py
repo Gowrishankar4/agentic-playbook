@@ -394,7 +394,11 @@ def merge(base, over):
 def validate_config(path, file_checks=True):
     cfg = load_structured(path)
     problems = []
-    schema_path = pathlib.Path(__file__).resolve().parent.parent / "config" / "schema.json"
+    here = pathlib.Path(__file__).resolve().parent
+    # Bundled in the skill (main: skills/playbook/scripts/) or in the repository's tools/ (directory build).
+    candidates = [here.parent / "config" / "schema.json",
+                  here.parent / "plugins" / "playbook" / "skills" / "playbook" / "config" / "schema.json"]
+    schema_path = next((c for c in candidates if c.exists()), candidates[0])
     try:
         import jsonschema
         schema = json.loads(schema_path.read_text())

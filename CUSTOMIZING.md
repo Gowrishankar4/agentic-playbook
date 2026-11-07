@@ -13,7 +13,7 @@ Start from the annotated [`config.example.yml`](plugins/playbook/skills/playbook
 Check a config any time:
 
 ```bash
-python3 plugins/playbook/skills/playbook/scripts/audit.py --validate-config ~/.config/playbook/config.yml
+python3 tools/audit.py --validate-config ~/.config/playbook/config.yml
 ```
 or `/playbook config validate` · `/playbook config explain <key>` shows which file set a value.
 

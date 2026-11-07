@@ -9,7 +9,7 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "plugins/playbook/skills"
-AUDIT = SKILLS / "playbook/scripts/audit.py"
+AUDIT = ROOT / "tools/audit.py"
 errors = []
 # Optional leak check: PLAYBOOK_PRIVATE_NAMES="acme|project-x" python3 scripts/validate.py
 PRIVATE = "|".join(re.escape(n) for n in os.environ.get("PLAYBOOK_PRIVATE_NAMES", "").split("|") if n)

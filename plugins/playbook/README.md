@@ -1,5 +1,7 @@
 # Agentic Playbook plugin
 
+> **Branch `directory`** — the build listed in the Claude directory. It is `main` with one change: `audit.py` lives in `tools/` at the repository root instead of inside the plugin (the directory accepts bundled scripts only from Verified organizations), so the skill does its audit checks itself. Claude Code users installing from this repository's marketplace get `main`, which bundles the script.
+
 One skill for AI-assisted delivery. `/playbook` creates and maintains a folder per feature or program — requirements, analysis, plan, decisions, progress and traceability — so any agent session continues from the same state, and runs a ripple sweep after every change so no file goes stale. Requirements come from a built-in interview that reads the code first, asks only what is missing, gets your approval and saves the result into `00-REQUIREMENTS.md`.
 
 ## Install

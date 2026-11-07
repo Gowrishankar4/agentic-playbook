@@ -9,6 +9,9 @@
   },
   "homepage": "https://github.com/Gowrishankar4/agentic-playbook",
   "repository": "https://github.com/Gowrishankar4/agentic-playbook",
+  "documentationUrl": "https://github.com/Gowrishankar4/agentic-playbook#readme",
+  "supportUrl": "https://github.com/Gowrishankar4/agentic-playbook/issues",
+  "privacyPolicyUrl": "https://github.com/Gowrishankar4/agentic-playbook/blob/main/PRIVACY.md",
   "license": "MIT",
   "keywords": [
     "playbook",

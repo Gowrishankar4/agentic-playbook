@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0 — 2026-11-07
+
+**Renamed the plugin to `agentic-playbook`** for the Claude directory listing ("playbook" is already a directory listing name). The skill and its command are unchanged: `/playbook`.
+
+- Install: `/plugin install agentic-playbook@agentic-playbook` (was `playbook@agentic-playbook`). If you installed 1.x under the old name, uninstall `playbook@agentic-playbook` and install the new name; your config and playbooks are untouched.
+- Namespaced command: `/agentic-playbook:playbook …` (was `/playbook:playbook …`).
+- Plugin icon re-encoded (no visual change).
+
 ## 1.1.0 — 2026-11-07
 
 Fixes from an end-to-end test (headless Claude Code driving a sample feature from `new` to `close`, 7 tasks, 14 sessions).

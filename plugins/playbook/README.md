@@ -6,15 +6,15 @@ One skill for AI-assisted delivery. `/playbook` creates and maintains a folder p
 
 ```
 /plugin marketplace add Gowrishankar4/agentic-playbook
-/plugin install playbook@agentic-playbook
+/plugin install agentic-playbook@agentic-playbook
 ```
 
 ## Use
 
-- `/playbook:playbook new <name>` — interview, scaffold, analyse code, plan, stop for approval
-- `/playbook:playbook interview [TASK]` — gather or refine requirements → `00-REQUIREMENTS.md`
-- `/playbook:playbook resume` · `log` · `decide D-02` · `task add` · `work` · `audit` · `status` · `close` · `config init`
+- `/agentic-playbook:playbook new <name>` — interview, scaffold, analyse code, plan, stop for approval
+- `/agentic-playbook:playbook interview [TASK]` — gather or refine requirements → `00-REQUIREMENTS.md`
+- `/agentic-playbook:playbook resume` · `log` · `decide D-02` · `task add` · `work` · `audit` · `status` · `close` · `config init`
 
 ## Setup
 
-None required. `/playbook:playbook config init` writes `~/.config/playbook/config.yml`, where you map your own skills, commands, MCP tools and scripts to each step, add rules with triggers, custom playbook files, commands and lint checks. See CUSTOMIZING.md in the repository.
+None required. `/agentic-playbook:playbook config init` writes `~/.config/playbook/config.yml`, where you map your own skills, commands, MCP tools and scripts to each step, add rules with triggers, custom playbook files, commands and lint checks. See CUSTOMIZING.md in the repository.

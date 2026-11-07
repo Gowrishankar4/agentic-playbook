@@ -10,7 +10,7 @@ Her intent: **"Customers should be able to request a refund from their order pag
 
 ```bash
 /plugin marketplace add Gowrishankar4/agentic-playbook
-/plugin install playbook@agentic-playbook
+/plugin install agentic-playbook@agentic-playbook
 ```
 
 Arun, on Cursor: `git clone …/agentic-playbook && ./install.sh --agent cursor`.

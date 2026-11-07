@@ -26,5 +26,5 @@ Bump `version` in `plugins/playbook/.claude-plugin/plugin.json` and add a CHANGE
 ## Trying a change
 ```bash
 claude --plugin-dir ./plugins/playbook
-> /playbook:playbook resume checkout-redesign   # point root at ./examples in a test config
+> /agentic-playbook:playbook resume checkout-redesign   # point root at ./examples in a test config
 ```

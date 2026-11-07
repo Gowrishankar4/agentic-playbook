@@ -35,10 +35,10 @@ One skill, `/playbook`: `new` · `interview` · `work` · `log` · `decide` · `
 
 ```bash
 /plugin marketplace add Gowrishankar4/agentic-playbook
-/plugin install playbook@agentic-playbook
+/plugin install agentic-playbook@agentic-playbook
 ```
 
-Commands are namespaced: `/playbook:playbook new checkout-redesign`, `/playbook:playbook interview CO-02`. Plain requests ("CO-02 is done", "the PM answered D-02") work too.
+Commands are namespaced: `/agentic-playbook:playbook new checkout-redesign`, `/agentic-playbook:playbook interview CO-02`. Plain requests ("CO-02 is done", "the PM answered D-02") work too.
 
 ### Cursor, Codex, Gemini CLI, Windsurf, any agent with a skills folder
 

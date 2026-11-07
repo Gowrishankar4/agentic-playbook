@@ -6,7 +6,7 @@
   },
   "plugins": [
     {
-      "name": "playbook",
+      "name": "agentic-playbook",
       "source": "./plugins/playbook",
       "description": "Requirement interview → plan → approval → consistent progress tracking. Configurable rules, triggers, tools, files and commands."
     }

@@ -178,6 +178,7 @@ In one sweep:
 `PROGRESS.md` now:
 
 ```markdown
+**Stage:** APPROVED — in delivery
 **Current phase:** Phase 1 — API, not started
 **Next action:** RF-01 refunds table + model (Meera)
 
@@ -330,7 +331,7 @@ Claude: audit clean. Summary written to PROGRESS.md:
 Meera:  yes
 ```
 
-→ Header `CLOSED 2026-11-13`; playbook archived under `~/work/playbooks/archive/` (asked first); the new red flag is added to Meera's config, so every future playbook catches it.
+→ PROGRESS `Stage` and the plan header both `CLOSED 2026-11-13`; playbook archived under `~/work/playbooks/archive/` (asked first); the new red flag is added to Meera's config, so every future playbook catches it.
 
 ---
 

@@ -2,6 +2,7 @@
 
 > Update in the same session as any work. Dates YYYY-MM-DD. Evidence = commit hash, branch, pushed?, PR, test run — or agent-tracked.
 
+**Stage:** APPROVED 2026-10-27 (Product lead) — in delivery
 **Current phase:** Phase 1 (API) — CO-01 done, CO-02 in progress
 **Next action:** Finish CO-02 totals endpoint (backend dev)
 

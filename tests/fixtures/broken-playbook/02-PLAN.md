@@ -12,6 +12,7 @@ Web calls a new `POST /checkout/totals` (debounced 250 ms); API wraps `pricing/t
 |---|---|---|
 | 1 — API | CO-01, CO-02, CO-04 | Totals endpoint p95 < 300 ms; parity test green |
 | 2 — Web | CO-03 | Single page live behind `checkout_v2` flag |
+| 3 — Polish | CO-05 | Confirmation email sent |
 
 ## Dependency graph
 
@@ -28,3 +29,4 @@ CO-01 ──► CO-04
 | CO-02 | Totals endpoint | api | api |
 | CO-03 | Single-page checkout UI | web | ui |
 | CO-04 | Checkout analytics events | api | api |
+| CO-05 | Order confirmation email | web | ui |

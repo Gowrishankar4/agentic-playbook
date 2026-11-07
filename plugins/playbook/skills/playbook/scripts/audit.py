@@ -5,7 +5,7 @@
   audit.py --validate-config FILE
 
 Exit code: 0 = no errors, 1 = errors found, 2 = usage problem.
-Judgement checks (phase vs reality, wording) are left to the agent.
+Judgement checks (wording, scope, whether evidence really covers a criterion) are left to the agent.
 """
 import argparse
 import fnmatch
@@ -26,7 +26,7 @@ SENSITIVE = {
     ],
     "pii": [
         r"\b[A-Za-z0-9._%+-]+@(?!example\.(com|org|net)\b)(?!placeholder\b)[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b",
-        r"(?<![\w-])\+?\d[\d ()-]{9,}\d(?![\w-])",
+        r"(?<![\w.-])\+?\d[\d ()-]{9,}\d(?![\w-])",
         r"\b\d{3}-\d{2}-\d{4}\b",
     ],
     "phi": [
@@ -39,7 +39,15 @@ SENSITIVE = {
         r"(?i)\bcvv\s*[:=]\s*\d{3,4}\b",
     ],
 }
-RELATIVE_DATES = re.compile(r"(?i)\b(yesterday|today|tomorrow|tonight|last week|next week|this week|next month|last month)\b")
+RELATIVE_DATES = re.compile(r"(?i)\b(yesterday|tomorrow|tonight|last week|next week|this week|next month|last month)\b")
+# "today" is only a date when used as one ("due today", "Today: …", a cell that is just "today");
+# prose like "behaves as today" or "local use only today" is not flagged.
+TODAY_AS_DATE = re.compile(r"(?i)(\b(due|by|on|until|till|from|since|as of|before|after|starting|ends?|ending)\s+today\b|^\W*today\b\s*[:—–-]|\|\s*today\s*\|)")
+AUDIT_IGNORE = re.compile(r"<!--\s*audit:ignore(?:\s+([\w, -]+))?\s*-->")
+# Task IDs: a prefix of 2–10 letters/digits starting with a letter (CO-01, SEA-07, CHKOUT-12, BE-2.3).
+TASK_ID = re.compile(r"\b[A-Z][A-Z0-9]{1,9}-\d+(?:\.\d+)?\b")
+STARTED = ("🟡", "[~]")
+NOT_STARTED = ("⬜", "[ ]")
 DONE = ("✅", "[x]")
 OPEN_STATES = ("⬜", "[ ]", "🟡", "[~]")
 
@@ -108,6 +116,12 @@ class Audit:
         self.files = {p: p.read_text(errors="replace") for p in sorted(self.root.rglob("*.md")) if ".git" not in p.parts}
 
     def add(self, sev, check, path, line, msg):
+        if path is not None and line:
+            lines = self.files.get(path, "").splitlines()
+            if 0 < line <= len(lines):
+                m = AUDIT_IGNORE.search(lines[line - 1])
+                if m and (not m.group(1) or check in [c.strip() for c in m.group(1).split(",")]):
+                    return
         rel = path.relative_to(self.root) if path else "-"
         self.findings.append({"severity": sev, "check": check, "file": str(rel), "line": line, "message": msg})
 
@@ -138,9 +152,9 @@ class Audit:
             if p.parent.name == "references":
                 continue
             for i, line in strip_code(text.splitlines()):
-                m = RELATIVE_DATES.search(line)
-                if m and "`" + m.group(0) not in line:
-                    self.add("warn", "relative-date", p, i, f'Relative date "{m.group(0)}" — use YYYY-MM-DD')
+                m = RELATIVE_DATES.search(line) or TODAY_AS_DATE.search(line)
+                if m and "`" + m.group(0).strip("|: —–-") not in line:
+                    self.add("warn", "relative-date", p, i, f'Relative date "{m.group(0).strip(" |:—–-")}" — use YYYY-MM-DD')
 
     def check_tasks(self):
         ids = {}
@@ -187,7 +201,7 @@ class Audit:
                     continue
                 for _, cells in rows:
                     if len(cells) > tk:
-                        phases[cells[ph].split()[0].strip("*")] = re.findall(r"\b[A-Z]{2,4}-\d+(?:\.\d+)?\b", cells[tk])
+                        phases[cells[ph].split()[0].strip("*")] = TASK_ID.findall(cells[tk])
         text = self.files[self.progress]
         for header, rows in tables(text):
             ph, st = col(header, "phase"), col(header, "status")
@@ -206,9 +220,19 @@ class Audit:
                     self.add("error", "phase-mismatch", self.progress, ln, f"Phase {cells[ph]} marked done but {left} not done")
                 elif all_done and not done(cells[st]):
                     self.add("warn", "phase-mismatch", self.progress, ln, f"All tasks of phase {cells[ph]} are done but the phase isn't")
+                elif any(m in cells[st] for m in STARTED) and all(any(n in self.states[t] for n in NOT_STARTED) for t in known):
+                    self.add("warn", "phase-not-started", self.progress, ln, f"Phase {cells[ph]} marked in progress but none of its tasks has started")
+                elif any(n in cells[st] for n in NOT_STARTED) and any(not any(n in self.states[t] for n in NOT_STARTED) for t in known):
+                    self.add("warn", "phase-not-started", self.progress, ln, f"Phase {cells[ph]} marked not started but some of its tasks have started")
+        approved = any(re.search(r"\*\*Status:\*\*\s*APPROVED", self.files[p]) for p in self.find("*PLAN*.md"))
+        open_phases = [ph for ph, ts in phases.items() if any(t in self.states and not done(self.states[t]) for t in ts)]
         for i, line in enumerate(text.splitlines(), 1):
+            if line.startswith("**Current phase:**") and approved and open_phases:
+                value = line.split(":**", 1)[1].strip()
+                if value in ("", "—", "-", "–") or value.startswith("<"):
+                    self.add("warn", "stale-current-phase", self.progress, i, f"Plan is approved but Current phase is empty — first open phase is {open_phases[0]}")
             if line.startswith("**Next action:**"):
-                for t in re.findall(r"\b[A-Z]{2,4}-\d+(?:\.\d+)?\b", line):
+                for t in TASK_ID.findall(line):
                     if t in self.states and done(self.states[t]):
                         self.add("warn", "stale-next-action", self.progress, i, f"Next action names {t}, which is already done")
 
@@ -259,14 +283,22 @@ class Audit:
                                 self.add("warn", "stale-blocker", p, ln, f"Blocked by {did}, which is decided")
 
     def check_traceability(self):
+        done = lambda st: any(d in st for d in DONE)
         for p in self.find("*TRACEABILITY*.md"):
             for header, rows in tables(self.files[p]):
-                r, t = col(header, "req"), col(header, "task")
+                r, t, s = col(header, "req"), col(header, "task"), col(header, "status")
                 if r is None or t is None:
                     continue
                 for ln, cells in rows:
                     if len(cells) > t and cells[r].strip() and cells[t].strip() in ("", "—", "-"):
                         self.add("error", "requirement-without-task", p, ln, f"{cells[r]} has no task")
+                        continue
+                    # Derived status = worst status among its tasks; ✅ only when every task is ✅ (model.md).
+                    if s is not None and len(cells) > s and done(cells[s]):
+                        tasks = [x for x in TASK_ID.findall(cells[t]) if x in getattr(self, "states", {})]
+                        left = [x for x in tasks if not done(self.states[x])]
+                        if left:
+                            self.add("error", "traceability-drift", p, ln, f"{cells[r]} marked done but {', '.join(left)} not done (status is the worst of its tasks)")
 
     def check_acceptance(self):
         for p in self.find("*REQUIREMENTS*.md"):
@@ -292,6 +324,8 @@ class Audit:
     @staticmethod
     def hit(prof, rx, line):
         for m in rx.finditer(line):
+            if prof == "pii" and re.search(r"\d{4}-\d{2}-\d{2}", m.group(0)):
+                continue  # an ISO date (e.g. "v1.0 2026-11-07"), not a phone number
             if prof != "pci" or "cvv" in rx.pattern:
                 return True
             digits = [int(c) for c in m.group(0) if c.isdigit()]

@@ -1,0 +1,7 @@
+version: 1
+rules:
+  - id: totals-parity
+    on_event: [task_done]
+    when: { repos: [api] }
+    mode: required
+    instruction: Attach the totals-parity test result (old vs new pricing on the fixture carts) as evidence.

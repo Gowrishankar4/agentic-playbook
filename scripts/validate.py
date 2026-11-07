@@ -65,14 +65,18 @@ for y in list((SKILLS / "playbook/config").glob("*.yml")) + list((SKILLS / "play
     if r.returncode:
         err(f"config invalid: {y.relative_to(ROOT)}\n{r.stdout}{r.stderr}")
 
-clean = subprocess.run([sys.executable, str(AUDIT), str(ROOT / "examples/checkout-redesign-playbook"), "--format", "json"], capture_output=True, text=True)
-if clean.returncode or json.loads(clean.stdout or "[]"):
-    err("example playbook should audit clean:\n" + clean.stdout)
+for clean_dir in ("examples/checkout-redesign-playbook", "tests/fixtures/clean-phrases-playbook"):
+    clean = subprocess.run([sys.executable, str(AUDIT), str(ROOT / clean_dir), "--format", "json"], capture_output=True, text=True)
+    if clean.returncode or json.loads(clean.stdout or "[]"):
+        err(f"{clean_dir} should audit clean:\n" + clean.stdout)
 broken = subprocess.run([sys.executable, str(AUDIT), str(ROOT / "tests/fixtures/broken-playbook"), "--format", "json"], capture_output=True, text=True)
 found = {f["check"] for f in json.loads(broken.stdout or "[]")}
-expected = {"requirement-without-task", "done-without-evidence", "id-mismatch", "sensitive-data", "stale-provisional", "stale-blocker", "relative-date", "no-todo-in-plan", "no-acceptance-criteria", "phase-mismatch", "stale-next-action", "agent-tracked-incomplete"}
+expected = {"requirement-without-task", "done-without-evidence", "id-mismatch", "sensitive-data", "stale-provisional", "stale-blocker", "relative-date", "no-todo-in-plan", "no-acceptance-criteria", "phase-mismatch", "stale-next-action", "agent-tracked-incomplete", "traceability-drift", "phase-not-started", "stale-current-phase"}
 if missing := expected - found:
     err(f"broken fixture: audit missed {sorted(missing)}")
+relative = [f for f in json.loads(broken.stdout or "[]") if f["check"] == "relative-date"]
+if not any("today" in f["message"].lower() for f in relative):
+    err("broken fixture: 'due today' should still be flagged as a relative date")
 
 print("OK" if not errors else f"{len(errors)} error(s)")
 sys.exit(1 if errors else 0)

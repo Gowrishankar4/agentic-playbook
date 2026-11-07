@@ -39,7 +39,7 @@ A playbook is a small database stored as markdown so that humans, any agent and 
 
 - **Single owner per fact.** Requirements live only in `00-REQUIREMENTS.md`, tasks in `02-PLAN.md`, task state and evidence in `PROGRESS.md`, decisions in `03-DECISIONS.md`. Everything else refers by ID.
 - **Append-only history.** Interview records, decided rows, directives and log entries are never edited; corrections supersede.
-- **Derived fields.** Current phase, next action, phase status and traceability status are computed from task rows on every sweep, so they cannot drift.
+- **Derived fields.** Current phase, next action, phase status and traceability status are recomputed from task rows on every sweep, and `audit.py` flags any that drift (`phase-mismatch`, `phase-not-started`, `traceability-drift`, `stale-next-action`).
 - **Explicit lifecycles.** Playbook, task and decision states with allowed transitions; the approval gate is the transition `DRAFT → APPROVED`.
 - **Evidence ladder.** Git — commit, branch, pushed, PR — and tests when they exist; `agent-tracked` (what, files, tests) when the agent did the work and nothing else exists; `not stated` otherwise — never invented.
 

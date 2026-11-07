@@ -27,11 +27,12 @@ A playbook is a small database kept in markdown. Each kind of fact has **one own
 
 | Field | Derived from |
 |---|---|
-| PROGRESS "Current phase" | first phase (plan order) whose tasks are not all `✅` |
+| PROGRESS "Stage" | playbook lifecycle (below); mirrors the plan header once a plan exists |
+| PROGRESS "Current phase" | first phase (plan order) whose tasks are not all `✅`; `—` only before approval — once approved it always names a phase |
 | PROGRESS "Next action" | first task in that phase that is not `✅`/`⏸`/`⛔`, else the most blocking open decision |
-| PROGRESS phase table status | `✅` all its tasks `✅` · `⏸`/`⛔` all remaining tasks waiting/blocked · `🟡` any started · `⬜` none started |
-| Traceability `Status` | worst status among the requirement's tasks; `✅` only when every task is `✅` and its acceptance criteria have evidence |
-| Plan header `Status` | `DRAFT` → `APPROVED <date> (<who>)` (set by approval only) → `CLOSED <date>` |
+| PROGRESS phase table status | `✅` all its tasks `✅` · `⏸`/`⛔` all remaining tasks waiting/blocked · `🟡` at least one task started or done · `⬜` none started (never `🟡` just because it is next) |
+| Traceability `Status` | worst status among the requirement's tasks (order: `⛔` < `⏸` < `⬜` < `🟡` < `✅`); `✅` only when every task is `✅` and its acceptance criteria have evidence. A task added later to a done requirement turns it back |
+| Plan header `Status` | `DRAFT` → `APPROVED <date> (<who>)` (set by approval only) → `CLOSED <date>` (set by `close`, together with PROGRESS `Stage`) |
 
 After any change, recompute all derived fields. A derived field that disagrees with its sources is a bug — fix it even if it was already wrong.
 
@@ -79,4 +80,6 @@ Tracked from git by default (`adapters/git.md`). Whatever exists is recorded; no
 | **Agent-tracked** | `agent-tracked YYYY-MM-DD: <what was implemented>; files: <paths>; tests: <command → result>` — used when the agent did the work and nothing is committed yet (or `evidence.fallback: agent-tracked`). Never used for work the agent did not do or see |
 | Unknown | ask once; if the user won't say → `<field> not stated` |
 
-A row with only `not stated` evidence stays `🟡` unless the user explicitly accepts it as done (`✅ accepted by <who>, evidence not stated`).
+A row with only `not stated` evidence stays `🟡` unless the user explicitly accepts it as done (`✅ accepted by <who>, evidence not stated`). The same holds for a task whose scope is only partly done: `🟡` naming what's left, or `✅ accepted by <who> <date>, left: <what>`.
+
+A hash someone gives you is verified before it is recorded (`adapters/git.md`); one that doesn't exist is never written.

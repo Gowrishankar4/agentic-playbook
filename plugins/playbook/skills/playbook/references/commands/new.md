@@ -25,7 +25,7 @@ Anything that differs from global config goes into the playbook's `playbook.yml`
 
 ## Step 3 — Scaffold
 
-Fire `before_scaffold`. Create the folder under `root` and the files from `templates/` (plus custom module templates and one context file per `context_files`). README gets name, repos, approver, preset; requirement-dependent sections say `None yet — requirements pending`. Plan header: `DRAFT — requirements pending`. Create `references/` and `db/` only when something goes in them. Fire `after_scaffold`.
+Fire `before_scaffold`. Create the folder under `root` and the files from `templates/` (plus custom module templates and one context file per `context_files`). README gets name, repos, approver, preset; requirement-dependent sections say `None yet — requirements pending`. Plan header: `DRAFT — requirements pending`; PROGRESS `Stage: REQUIREMENTS`, phase table empty until the plan exists. Create `references/` and `db/` only when something goes in them. Fire `after_scaffold`.
 
 ## Step 4 — Gather requirements (interview)
 

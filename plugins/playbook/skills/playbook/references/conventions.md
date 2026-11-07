@@ -16,7 +16,11 @@ Default set (config `status.style: emoji`):
 | `⏸` | waiting on a decision — name the D-NN |
 | `⛔` | blocked — say by what |
 
-Allowed transitions between states: `model.md` → Lifecycles. `status.style: ascii` uses `[ ]`, `[~]`, `[x]`, `[?]`, `[!]`. A team may define its own set under `status.markers`; the five meanings stay.
+Allowed transitions between states: `model.md` → Lifecycles.
+
+**A status cell holds the marker (and a date), nothing else.** Qualifiers go after a `·` as a `⚠️` note, never in place of the marker. The one combined form is the model's `✅ code · ⚠️ D-NN open: <impact>` on a **task** row. A traceability `Status` is the *worst* marker among its tasks (`⏸` if any task waits on a decision) — never `✅` while a task is not `✅`.
+
+**"Blocked by" holds only task IDs, `D-NN`s or a named external blocker.** Plan approval is not a blocker: before approval, task rows stay `⬜` with `—`, and the PROGRESS `Stage` line says `DRAFT — awaiting approval`. `status.style: ascii` uses `[ ]`, `[~]`, `[x]`, `[?]`, `[!]`. A team may define its own set under `status.markers`; the five meanings stay.
 
 ## Evidence
 Kinds, the `agent-tracked` fallback and what a `✅` needs: `model.md` → Evidence. Config `evidence.required` lists what a `✅` must have (default: commit or PR, plus verify result); `evidence.fallback` (default `agent-tracked`) applies when the agent did the work and none of that exists.
@@ -43,8 +47,10 @@ Task prefix never equals a requirement prefix. Never reuse an ID; superseded ite
 ## Ambiguous answers
 ("X plus Y" = AND or OR?) Record your reading in the Decided row, add `⚠️ confirm reading with <who>`, and list it in your report.
 
+An instruction about *this session's work* ("don't touch the other files", "skip that for now") is recorded as what happened — `deferred by <who> <date>: <what>` — never upgraded into a standing decision ("left unfrozen at the requester's instruction"). If it might be meant as standing, ask once.
+
 ## Log
-A table in `PROGRESS.md`, newest first, one row per session (several facts → one row, bold lead per fact):
+A table in `PROGRESS.md`, newest first, one row per **sitting** — a conversation or work session, however many commands it ran. A later message in the same conversation extends that row (add a bold lead) rather than adding a new one; a new conversation, or a new day, starts a new row. Format (several facts → one row, bold lead per fact):
 `| YYYY-MM-DD | **What (hash, repo, pushed?):** detail. verify result. ⚠️ follow-ups |`
 
 ## Task rows

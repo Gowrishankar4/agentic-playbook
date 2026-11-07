@@ -61,7 +61,7 @@ capabilities:
 
 interview:
   depth: standard
-  one_question_at_a_time: true
+  one_question_at_a_time: true   # one topic per message (≤ 4 related sub-questions with defaults)
   spec_format: xml
   extra_questions: []
 

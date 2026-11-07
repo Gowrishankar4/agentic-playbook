@@ -9,7 +9,7 @@ To use your own interview skill instead (e.g. a `/prompt` skill), map it in conf
 | Key | Default | Meaning |
 |---|---|---|
 | `depth` | `standard` | `quick` (≤ 3 questions), `standard` (≤ 8), `deep` (no cap, every section probed). "quick"/"deep" in the request wins |
-| `one_question_at_a_time` | `true` | `false` = batch questions in one message |
+| `one_question_at_a_time` | `true` | `true` = one **topic** per message (e.g. "how expiry behaves"); it may carry up to 4 tightly related sub-questions, each with lettered options and a marked default, so one reply like `1a, 2b` answers it. `false` = every remaining question in one message |
 | `spec_format` | `xml` | `xml` or `markdown` for the saved record |
 | `sections` | the 7 standard | add, remove or rename; `context`, `task`, `acceptance_criteria` cannot be removed |
 | `extra_questions` | `[]` | always-asked questions, each with an optional `when:` (rule conditions) |
@@ -21,7 +21,7 @@ To use your own interview skill instead (e.g. a `/prompt` skill), map it in conf
 3. **Inspect before asking** (technical) — use the `code-analysis` capability: entry points, existing patterns, data model, tests, config. Never ask what the code answers; state what you found and ask only for confirmation where it matters.
 4. **Interview** — questions from `interview-questions.md` for the type, at the configured depth, plus matching `extra_questions` (and, for `new`, the playbook questions at the end of that file).
    - skip anything already answered
-   - one question at a time unless configured otherwise; offer 2–4 likely answers where you can
+   - one topic per message unless configured otherwise (see `one_question_at_a_time`); offer 2–4 likely answers with a marked default; say how many topics are left ("topic 2 of ~4")
    - "you decide" / "default" → pick the clean standard option and record it as an assumption
    - a question only someone else can answer → don't block; it becomes a `D-NN`
    - stop when every required section can be filled; never pad

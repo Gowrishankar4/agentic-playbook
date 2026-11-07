@@ -8,7 +8,7 @@ Progress is tracked from git by default. No config, no connector, no token: git 
 |---|---|
 | Repo | the repo from the plan row (README repos table gives the path) |
 | Branch | `git -C <repo> rev-parse --abbrev-ref HEAD`, or the branch the user names |
-| Commit | `git -C <repo> log -1 --format=%h` after the work, or the hash the user gives — verify it exists with `git -C <repo> cat-file -e <hash>` |
+| Commit | `git -C <repo> log -1 --format=%h` after the work, or the hash the user gives — verify it exists with `git -C <repo> cat-file -e <hash>`. Not found → list `<last evidence hash>..<task branch>` on the task's branch before searching other branches |
 | Pushed? | `git -C <repo> branch -r --contains <hash>` non-empty → `pushed`, else `not pushed` |
 | PR / MR | link if the user gives one or it's in the commit / branch description; never guessed |
 | Verify / tests | result of the `verify` capability, or the test command run (`jest 14/14`) |

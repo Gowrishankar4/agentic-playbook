@@ -9,3 +9,4 @@
 | C5 | Checkout events | CO-04 | api events test | ✅ |
 | I1 | Totals parity | CO-02 | parity test on fixture carts | 🟡 |
 | C6 | Address autocomplete | — | — | ⬜ |
+| C7 | Order confirmation email | CO-03, CO-05 | e2e confirmation email | ✅ |

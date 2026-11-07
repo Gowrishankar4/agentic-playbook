@@ -12,3 +12,5 @@ Report in ≤ 10 lines:
 - staleness noticed — derived fields that disagree with task rows (`../model.md`), e.g. phase row ⬜ while its tasks are ✅, a "next action" that's already done
 
 Offer to fix staleness; don't fix it silently during resume.
+
+`resume` is also the way to keep long programs cheap: a fresh session that runs `resume` starts from the playbook files, not a long chat history. Suggest it when a session has carried several tasks.

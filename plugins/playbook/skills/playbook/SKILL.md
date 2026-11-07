@@ -100,6 +100,9 @@ Full list: `references/conventions.md`. Never break these:
 | "No commit or ticket — can't track it" | Record `agent-tracked` evidence: what, files, tests. |
 | "I implemented it, I'll update PROGRESS later" | Same session. Not done until `PROGRESS.md` says so. |
 | "I'll guess the push / verify state" | Ask once; else `not stated`. |
+| "I was given a commit hash, so I'll record it" | Verify it exists in the repo first. A hash that doesn't exist is never written — find the real commit or ask. |
+| "They said just mark it done" | Part of the scope left → stay `🟡` and name it, or `✅ accepted by <who>, left: <what>` only on explicit acceptance. |
+| "The requirement's tasks are mostly done — mark it ✅" | Traceability status is the *worst* of its tasks. One `⏸` task makes it `⏸`. |
 | "Other files mention D-01 but that's QA's call" | Update what the answer settles; flag the rest (`⚠️ needs QA`) and list it. |
 | "New task has no requirement — skip traceability" | Add a requirement (`added <date>, source`) or a `D-NN` for the unknowns. |
 | "The team uses Jira — I'll update it directly" | The core doesn't touch trackers. That's a custom skill on an event, if the team added one. |

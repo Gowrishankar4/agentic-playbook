@@ -24,3 +24,5 @@ No draft-order persistence; totals are only computed at step 4.
 | Risk | Impact | Mitigation |
 |---|---|---|
 | Totals drift from pricing service | Wrong charges | Parity test on fixture carts (I1) |
+
+Parity review is due today.

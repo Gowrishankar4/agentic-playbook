@@ -2,7 +2,7 @@
 
 > Update in the same session as any work. Dates YYYY-MM-DD. Evidence = commit hash, branch, pushed?, PR, test run — or agent-tracked.
 
-**Current phase:** Phase 1 (API) — CO-01 done, CO-02 in progress
+**Current phase:** —
 **Next action:** Tomorrow: finish CO-02 totals endpoint (backend dev)
 
 ## Phase status
@@ -11,6 +11,7 @@
 |---|---|---|---|---|
 | 1 — API | 🟡 | 2026-10-27 | | CO-02 left |
 | 2 — Web | ✅ | | | CO-03 waits on D-02 |
+| 3 — Polish | 🟡 | | | CO-05 not started |
 
 ## Tasks (one row per task)
 
@@ -21,6 +22,7 @@
 | CO-03 | ⏸ | web | D-01 | — |
 | CO-09 | ⬜ | web | — | — |
 | CO-04 | ✅ | api | — | agent-tracked 2026-10-31: events added |
+| CO-05 | ⬜ | web | — | — |
 
 
 ## Log

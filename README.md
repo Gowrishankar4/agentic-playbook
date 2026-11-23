@@ -40,6 +40,10 @@ One skill, `/playbook`: `new` · `interview` · `work` · `log` · `decide` · `
 
 Commands are namespaced: `/agentic-playbook:playbook new checkout-redesign`, `/agentic-playbook:playbook interview CO-02`. Plain requests ("CO-02 is done", "the PM answered D-02") work too.
 
+### Cursor (plugin)
+
+This repo is a Cursor plugin (`.cursor-plugin/`). To try it before it's listed in the Cursor Marketplace, copy `plugins/playbook` to `~/.cursor/plugins/local/agentic-playbook` and reload the window.
+
 ### Cursor, Codex, Gemini CLI, Windsurf, any agent with a skills folder
 
 ```bash
